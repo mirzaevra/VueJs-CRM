@@ -37,7 +37,8 @@
                 <small
                         v-if="$v.password.$dirty && !$v.password.minLength"
                         class="helper-text invalid"
-                >Пароль должен состоять из {{ $v.password.$params.minLength.min }} и более символов. Сейчас он {{ password.length }}
+                >Пароль должен состоять из {{ $v.password.$params.minLength.min }} и более символов. Сейчас он {{
+                    password.length }}
                 </small>
             </div>
         </div>
@@ -63,6 +64,7 @@
 <script>
   import {email, required, minLength} from 'vuelidate/lib/validators';
   import notifications from "@/utils/notifications";
+  import {mapActions} from 'vuex';
 
   export default {
     name: "Login",
@@ -97,7 +99,10 @@
       }
     },
     methods: {
-      submitHandler() {
+      ...mapActions([
+        'loginAction'
+      ]),
+      async submitHandler() {
         if (this.$v.$invalid) {
           this.$v.$touch();
           return;
@@ -106,16 +111,17 @@
         const formData = {
           email: this.email,
           password: this.password
-        }
+        };
 
-        console.log(formData);
-
-        this.$router.push('/');
+        try {
+          await this.loginAction(formData);
+          this.$router.push('/');
+        } catch (e) {}
       }
     },
     mounted() {
       if (notifications[this.$route.query.message]) {
-        this.$notification(notifications[this.$route.query.message])
+        this.$notification(notifications[this.$route.query.message]);
       }
     }
   };

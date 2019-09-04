@@ -40,41 +40,47 @@
 </template>
 
 <script>
-    export default {
-        name: "Nav",
-        data() {
-            return {
-                date: new Date(),
-                interval: null,
-                dropdown: null
-            }
-        },
-        methods: {
-            sidebarVisibility() {
-                this.$emit('click');
-            },
-            logout() {
-                this.$router.push('/login?message=logout');
-            },
-            refreshDate() {
-               this.interval = setInterval(() =>{
-                    this.date = new Date();
-                }, 1000)
-            }
-        },
-        mounted() {
-            this.refreshDate();
-            this.dropdown = M.Dropdown.init(this.$refs.dropdown, {
-                constrainWidth: false
-            })
-        },
-        beforeDestroy() {
-            clearInterval(this.interval);
-            if (this.dropdown && this.dropdown.destroy) {
-                this.dropdown.destroy();
-            }
-        }
+  import {mapActions} from 'vuex';
+
+  export default {
+    name: "Nav",
+    data() {
+      return {
+        date: new Date(),
+        interval: null,
+        dropdown: null
+      };
+    },
+    methods: {
+      ...mapActions([
+        'logoutAction'
+      ]),
+      sidebarVisibility() {
+        this.$emit('click');
+      },
+      async logout() {
+        await this.logoutAction();
+        this.$router.push('/login?message=logout');
+      },
+      refreshDate() {
+        this.interval = setInterval(() => {
+          this.date = new Date();
+        }, 1000);
+      }
+    },
+    mounted() {
+      this.refreshDate();
+      this.dropdown = M.Dropdown.init(this.$refs.dropdown, {
+        constrainWidth: false
+      });
+    },
+    beforeDestroy() {
+      clearInterval(this.interval);
+      if (this.dropdown && this.dropdown.destroy) {
+        this.dropdown.destroy();
+      }
     }
+  };
 </script>
 
 <style scoped>

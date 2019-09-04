@@ -1,36 +1,67 @@
 <template>
-    <form class="card auth-card">
+    <form class="card auth-card" @submit.prevent="submitHandler">
         <div class="card-content">
             <span class="card-title">Домашняя бухгалтерия</span>
             <div class="input-field">
                 <input
+                        v-model.trim="email"
                         id="email"
                         type="text"
+                        :class="{invalid: emailCheck}"
                 >
                 <label for="email">Email</label>
-                <small class="helper-text invalid">Email</small>
+                <small
+                        v-if="$v.email.$dirty && !$v.email.required"
+                        class="helper-text invalid"
+                >Поле Email не должно быть пустым
+                </small>
+                <small
+                        v-if="$v.email.$dirty && !$v.email.email"
+                        class="helper-text invalid"
+                >Введите корректный Email
+                </small>
             </div>
             <div class="input-field">
                 <input
+                        v-model.trim="password"
                         id="password"
                         type="password"
-                        class="validate"
+                        :class="{invalid: passwordCheck}"
                 >
                 <label for="password">Пароль</label>
-                <small class="helper-text invalid">Password</small>
+                <small
+                        v-if="$v.password.$dirty && !$v.password.required"
+                        class="helper-text invalid"
+                >Введите пароль
+                </small>
+                <small
+                        v-if="$v.password.$dirty && !$v.password.minLength"
+                        class="helper-text invalid"
+                >Пароль должен состоять из {{ $v.password.$params.minLength.min }} и более символов. Сейчас он {{
+                    password.length }}
+                </small>
             </div>
             <div class="input-field">
                 <input
+                        v-model.trim="name"
                         id="name"
                         type="text"
                         class="validate"
+                        :class="{invalid: nameCheck}"
                 >
                 <label for="name">Имя</label>
-                <small class="helper-text invalid">Name</small>
+                <small
+                        v-if="$v.name.$dirty && !$v.name.required"
+                        class="helper-text invalid"
+                >Введи Ваше имя
+                </small>
             </div>
             <p>
                 <label>
-                    <input type="checkbox"/>
+                    <input
+                            type="checkbox"
+                            v-model="agree"
+                    />
                     <span>С правилами согласен</span>
                 </label>
             </p>
@@ -77,7 +108,7 @@
         minLength: minLength(6)
       },
       name: {required},
-      agree: {required}
+      agree: {checked: v => v}
     },
     computed: {
       emailCheck() {
@@ -91,8 +122,33 @@
           return true;
         }
         return false;
+      },
+      nameCheck() {
+        if ((this.$v.name.$dirty && !this.$v.name.required)) {
+          return true;
+        }
+        return false;
       }
     },
+    methods: {
+      submitHandler() {
+        if (this.$v.$invalid) {
+          this.$v.$touch();
+          return;
+        }
+
+        const formData = {
+          email: this.email,
+          password: this.password,
+          agree: this.agree,
+          name: this.name
+        };
+
+        console.log(formData);
+
+        this.$router.push('/');
+      }
+    }
   };
 </script>
 

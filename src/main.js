@@ -3,12 +3,14 @@ import Vuelidate from "vuelidate";
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import notificationPlugin from '@/plugins/notification.plugin.js';
 import dateFilter from './filters/date.filter';
 import './registerServiceWorker';
 import 'materialize-css/dist/js/materialize.min';
 
 Vue.config.productionTip = false;
 
+Vue.use(notificationPlugin);
 Vue.use(Vuelidate);
 Vue.filter('date', dateFilter);
 

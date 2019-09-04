@@ -62,6 +62,7 @@
 
 <script>
   import {email, required, minLength} from 'vuelidate/lib/validators';
+  import notifications from "@/utils/notifications";
 
   export default {
     name: "Login",
@@ -110,6 +111,11 @@
         console.log(formData);
 
         this.$router.push('/');
+      }
+    },
+    mounted() {
+      if (notifications[this.$route.query.message]) {
+        this.$notification(notifications[this.$route.query.message])
       }
     }
   };

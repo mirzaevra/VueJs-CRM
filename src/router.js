@@ -16,8 +16,8 @@ export default new Router({
             component: () => import('./views/Login')
         },
         {
-            path: '/registr',
-            name: 'registr',
+            path: '/register',
+            name: 'register',
             meta: {
                 layout: 'auth'
             },

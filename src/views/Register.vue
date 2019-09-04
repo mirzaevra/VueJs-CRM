@@ -48,16 +48,52 @@
 
             <p class="center">
                 Уже есть аккаунт?
-                <a href="/">Войти!</a>
+                <router-link to="/login">Войти!</router-link>
             </p>
         </div>
     </form>
 </template>
 
 <script>
-    export default {
-        name: "Register"
-    }
+  import {email, required, minLength} from 'vuelidate/lib/validators';
+
+  export default {
+    name: "Register",
+    data() {
+      return {
+        email: '',
+        password: '',
+        name: '',
+        agree: false
+      };
+    },
+    validations: {
+      email: {
+        email,
+        required
+      },
+      password: {
+        required,
+        minLength: minLength(6)
+      },
+      name: {required},
+      agree: {required}
+    },
+    computed: {
+      emailCheck() {
+        if ((this.$v.email.$dirty && !this.$v.email.required) || (this.$v.email.$dirty && !this.$v.email.email)) {
+          return true;
+        }
+        return false;
+      },
+      passwordCheck() {
+        if ((this.$v.password.$dirty && !this.$v.password.required) || (this.$v.password.$dirty && !this.$v.password.minLength)) {
+          return true;
+        }
+        return false;
+      }
+    },
+  };
 </script>
 
 <style scoped>

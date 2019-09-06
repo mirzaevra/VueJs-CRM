@@ -1,59 +1,53 @@
 <template>
-  <div>
-                    <div class="page-title">
-                        <h3>Счет</h3>
+    <div>
+        <div class="page-title">
+            <h3>Счет</h3>
 
-                        <button class="btn waves-effect waves-light btn-small">
-                            <i class="material-icons">refresh</i>
-                        </button>
-                    </div>
+            <button class="btn waves-effect waves-light btn-small" @click="refresh">
+                <i class="material-icons">refresh</i>
+            </button>
+        </div>
 
-                    <div class="row">
-                        <div class="col s12 m6 l4">
-                            <div class="card light-blue bill-card">
-                                <div class="card-content white-text">
-                                    <span class="card-title">Счет в валюте</span>
+        <Loader v-if="loading"/>
 
-                                    <p class="currency-line">
-                                        <span>12.0 Р</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+        <div
+                v-else
+                class="row">
+            <div class="col s12 m6 l4">
+                <card-bill :rates="currency.rates"/>
+            </div>
 
-                        <div class="col s12 m6 l8">
-                            <div class="card orange darken-3 bill-card">
-                                <div class="card-content white-text">
-                                    <div class="card-header">
-                                        <span class="card-title">Курс валют</span>
-                                    </div>
-                                    <table>
-                                        <thead>
-                                        <tr>
-                                            <th>Валюта</th>
-                                            <th>Курс</th>
-                                            <th>Дата</th>
-                                        </tr>
-                                        </thead>
-
-                                        <tbody>
-                                        <tr>
-                                            <td>руб</td>
-                                            <td>12121</td>
-                                            <td>12.12.12</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="col s12 m6 l8">
+                <card-currency :rates="currency.rates" :date="currency.date"/>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
+  import CardBill from "@/components/parts/CardBill";
+  import CardCurrency from "@/components/parts/CardCurrency";
 
-export default {
-  name: 'home'
-}
+  export default {
+    name: 'home',
+    data() {
+      return {
+        loading: true,
+        currency: null
+      };
+    },
+    components: {CardCurrency, CardBill},
+    computed: {},
+    async mounted() {
+      this.currency = await this.$store.dispatch('fetchCurrencyAction');
+      this.loading = false;
+    },
+    methods: {
+      async refresh() {
+        this.loading = true;
+        this.currency = await this.$store.dispatch('fetchCurrencyAction');
+        this.loading = false;
+      }
+    }
+  };
 </script>

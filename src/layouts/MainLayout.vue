@@ -6,7 +6,11 @@
         <Sidebar v-model="isVisible"/>
 
         <main class="app-content" :class="{full: !isVisible}">
-            <div class="app-page">
+            <Loader
+                    v-if="loading"/>
+            <div
+                    v-else
+                    class="app-page">
                 <router-view/>
             </div>
         </main>
@@ -20,26 +24,34 @@
 </template>
 
 <script>
-    import Sidebar from '@/components/common/Sidebar';
-    import Nav from '@/components/common/Nav';
+  import Sidebar from '@/components/common/Sidebar';
+  import Nav from '@/components/common/Nav';
 
-    export default {
-        name: "MainLayout",
-        data () {
-            return {
-                isVisible: true
-            }
-        },
-        components: {
-            Sidebar,
-            Nav
-        },
-        methods: {
-            someTest() {
-                this.isVisible = !this.isVisible;
-            }
-        }
+  export default {
+    name: "MainLayout",
+    data() {
+      return {
+        isVisible: true,
+        loading: true
+      };
+    },
+    components: {
+      Sidebar,
+      Nav
+    },
+    methods: {
+      someTest() {
+        this.isVisible = !this.isVisible;
+      }
+    },
+    async mounted() {
+      if (!Object.keys(this.$store.getters.info).length) {
+        await this.$store.dispatch('fetchInfoAction');
+      }
+
+      this.loading = false;
     }
+  };
 </script>
 
 <style scoped>

@@ -4,7 +4,9 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import notificationPlugin from '@/plugins/notification.plugin.js';
+import Loader from '@/components/common/Loader.vue';
 import dateFilter from './filters/date.filter';
+import currencyFilter from './filters/currency.filter';
 import './registerServiceWorker';
 import 'materialize-css/dist/js/materialize.min';
 //Firebase
@@ -17,6 +19,8 @@ Vue.config.productionTip = false;
 Vue.use(notificationPlugin);
 Vue.use(Vuelidate);
 Vue.filter('date', dateFilter);
+Vue.filter('currency', currencyFilter);
+Vue.component('Loader', Loader);
 
 
 firebase.initializeApp({

@@ -16,7 +16,7 @@
                             data-target="dropdown"
                             ref="dropdown"
                     >
-                        USER NAME
+                        {{userName}}
                         <i class="material-icons right">arrow_drop_down</i>
                     </a>
 
@@ -50,6 +50,11 @@
         interval: null,
         dropdown: null
       };
+    },
+    computed: {
+      userName() {
+        return this.$store.getters.info.name;
+      }
     },
     methods: {
       ...mapActions([
